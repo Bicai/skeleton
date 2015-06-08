@@ -15,12 +15,27 @@ public class CalculatorTest {
      **/
     @Before
     public void setUp() {
-        tester = new StaffCalculator(); // Comment me out to test your Calculator
-        // tester = new Calculator();   // Un-comment me to test your Calculator
+        // tester = new StaffCalculator(); // Comment me out to test your Calculator
+        tester = new Calculator();   // Un-comment me to test your Calculator
     }
 
     // TASK 1: WRITE JUNIT TESTS
     // YOUR CODE HERE
+    @Test
+    public void test1() {
+        assertEquals(6, tester.multiply(2, 3));
+    }
+
+    @Test
+    public void test2() {
+        assertEquals(0, tester.multiply(0, 5));
+    }
+
+    @Test
+    public void test3() {
+        assertEquals(-12, tester.multiply(-2, 6));
+    }
+    
 
     /* Run the unit tests in this file. */
     public static void main(String... args) {
