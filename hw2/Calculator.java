@@ -2,7 +2,8 @@ import list.EquationList;
 
 public class Calculator {
     // YOU MAY WISH TO ADD SOME FIELDS
-
+    public EquationList savedEquations = new EquationList("s",999,null);
+    public int size = 0;
     /**
      * TASK 2: ADDING WITH BIT OPERATIONS
      * add() is a method which computes the sum of two integers x and y using 
@@ -12,8 +13,26 @@ public class Calculator {
      * @return the sum of x and y
      **/
     public int add(int x, int y) {
-        // YOUR CODE HERE
-        return -1;
+        //recurrsive
+        if (y==0) 
+            return x;
+        else
+            return add(x^y, (x&y) << 1);
+        //iteration
+        // Iterate till there is no carry  
+    // while (y != 0)
+    // {
+    //     // carry now contains common set bits of x and y
+    //     int carry = x & y;  
+ 
+    //     // Sum of bits of x and y where at least one of the bits is not set
+    //     x = x ^ y; 
+ 
+    //     // Carry is shifted by one so that adding it to x gives the required sum
+    //     y = carry << 1;
+    // }
+    // return x;
+
     }
 
     /**
@@ -23,11 +42,23 @@ public class Calculator {
      * @param x is an integer which is one of the two numbers to multiply
      * @param y is an integer which is the other of the two numbers to multiply
      * @return the product of x and y
+     * source: http://stackoverflow.com/questions/4895173/bitwise-multiply-and-add-in-java
      **/
     public int multiply(int x, int y) {
-        // YOUR CODE HERE
-        return -1;
-    }
+        int a = x;
+        int b = y;
+        int result = 0;
+        while (b != 0) // Iterate the loop till b==0
+        {
+            if ((b & 01) != 0) // Logical ANDing of the value of b with 01
+            {
+                result =  add(result, a); // Update the result with the new value of a.
+            }
+            a <<= 1;              // Left shifting the value contained in 'a' by 1.
+            b >>= 1;             // Right shifting the value contained in 'b' by 1.
+        }
+        return result;
+    } 
 
     /**
      * TASK 5A: CALCULATOR HISTORY - IMPLEMENTING THE HISTORY DATA STRUCTURE
@@ -39,9 +70,14 @@ public class Calculator {
      * @param result is an integer corresponding to the result of the equation
      **/
     public void saveEquation(String equation, int result) {
-        // YOUR CODE HERE
+        EquationList oldFront = savedEquations;
+        savedEquations = new EquationList(equation, result, oldFront);
+        size = size + 1;
+        // while (p.next != null) {
+        //     p = p.next;
+        // }
+        // p.next = new EquationList(equation, result, null);
     }
-
     /**
      * TASK 5B: CALCULATOR HISTORY - PRINT HISTORY HELPER METHODS
      * printAllHistory() prints each equation (and its corresponding result), 
@@ -50,7 +86,7 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printAllHistory() {
-        // YOUR CODE HERE
+        printHistory(size);
     }
 
     /**
@@ -61,7 +97,14 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printHistory(int n) {
-        // YOUR CODE HERE
+        EquationList p = savedEquations;
+        if (n == 0) {
+            System.out.println("No equations");
+        }
+        for (int i = 0; i < n ; i++ ) {
+            System.out.println(p.equation+" = "+p.result);
+            p = p.next;
+        }
     }    
 
     /**
@@ -69,7 +112,8 @@ public class Calculator {
      * undoEquation() removes the most recent equation we saved to our history.
     **/
     public void undoEquation() {
-        // YOUR CODE HERE
+        savedEquations = savedEquations.next;
+        size = size - 1;
     }
 
     /**
@@ -77,7 +121,8 @@ public class Calculator {
      * clearHistory() removes all entries in our history.
      **/
     public void clearHistory() {
-        // YOUR CODE HERE
+        savedEquations = new EquationList("s",999,null);
+        size = 0;
     }
 
     /**
@@ -87,8 +132,18 @@ public class Calculator {
      * @return the sum of all of the results in history
      **/
     public int cumulativeSum() {
-        // YOUR CODE HERE
-        return -1;
+        int sum = 0;
+        EquationList p = savedEquations;
+        if (size == 0 ) {
+            return sum;
+        }
+        else {
+            for (int i = 0; i < size ; i++ ) {
+                sum += p.result;
+                p = p.next;
+            }
+            return sum;
+        }   
     }
 
     /**
@@ -98,7 +153,17 @@ public class Calculator {
      * @return the product of all of the results in history
      **/
     public int cumulativeProduct() {
-        // YOUR CODE HERE
-        return -1;
+        int product = 1;
+        EquationList p = savedEquations;
+        if (size == 0 ) {
+            return product;
+        }
+        else {
+            for (int i = 0; i < size ; i++ ) {
+                product = product * p.result;
+                p = p.next;
+            }
+            return product;
+        }
     }
 }
